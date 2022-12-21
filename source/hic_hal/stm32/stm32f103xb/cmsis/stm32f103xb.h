@@ -383,6 +383,9 @@ typedef struct
   __IO uint32_t BSRR;
   __IO uint32_t BRR;
   __IO uint32_t LCKR;
+  __IO uint32_t GPIO_RSVD1[(0x30-0x1C) >> 2];
+  __IO uint32_t PUPDEN;
+  __IO uint32_t PUPDLOCK;
 } GPIO_TypeDef;
 
 /**
@@ -452,8 +455,10 @@ typedef struct
   __IO uint32_t APB1ENR;
   __IO uint32_t BDCR;
   __IO uint32_t CSR;
-
-
+  __IO uint32_t RCC_RSVD1[(0x30-0x28) >> 2];
+  __IO uint32_t RCC_MCO_VAL;
+  __IO uint32_t RCC_RSVD2[(0xF0-0x34) >> 2];
+  __IO uint32_t RCC_SYSCFG_CONFIG;
 } RCC_TypeDef;
 
 /**

@@ -124,8 +124,8 @@ void gpio_init(void)
     __HAL_RCC_AFIO_CLK_ENABLE();
     // Disable JTAG to free pins for other uses
     // Note - SWD is still enabled
-    __HAL_AFIO_REMAP_SWJ_NOJTAG();
-
+    // __HAL_AFIO_REMAP_SWJ_NOJTAG();
+    __HAL_AFIO_REMAP_SWJ_ENABLE();
     USB_CONNECT_PORT_ENABLE();
     USB_CONNECT_OFF();
     GPIO_InitStructure.Pin = USB_CONNECT_PIN;
@@ -171,7 +171,8 @@ void gpio_init(void)
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
     HAL_GPIO_Init(POWER_EN_PIN_PORT, &GPIO_InitStructure);
-
+    nRESET_PIN_PORT->PUPDLOCK = 0xa5a5a5a5;
+	nRESET_PIN_PORT->PUPDEN |= nRESET_PIN;
     // Setup the 8MHz MCO
     GPIO_InitStructure.Pin = GPIO_PIN_8;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;

@@ -31,6 +31,49 @@ uint32_t time_count;
 
 static uint32_t tim2_clk_div(uint32_t apb1clkdiv);
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+FlagStatus RCC_GetFlagStatus(uint8_t RCC_FLAG)
+{
+  uint32_t tmp = 0;
+  uint32_t statusreg = 0;
+  FlagStatus bitstatus = RESET;
+  /* Check the parameters */
+  assert_param(IS_RCC_FLAG(RCC_FLAG));
+
+  /* Get the RCC register index */
+  tmp = RCC_FLAG >> 5;
+  if (tmp == 1)               /* The flag to check is in CR register */
+  {
+    statusreg = RCC->CR;
+  }
+  else if (tmp == 2)          /* The flag to check is in BDCR register */
+  {
+    statusreg = RCC->BDCR;
+  }
+  else                       /* The flag to check is in CSR register */
+  {
+    statusreg = RCC->CSR;
+  }
+
+  /* Get the flag position */
+  tmp = RCC_FLAG &  ((uint8_t)0x1F);
+  if ((statusreg & ((uint32_t)1 << tmp)) != (uint32_t)RESET)
+  {
+    bitstatus = SET;
+  }
+  else
+  {
+    bitstatus = RESET;
+  }
+
+  /* Return the flag status */
+  return bitstatus;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
 /**
     * @brief  Switch the PLL source from HSI to HSE bypass, and select the PLL as SYSCLK
   *         source.
@@ -86,6 +129,91 @@ void sdk_init()
         /* Initialization Error */
         util_assert(0);
     }
+
+//RCC_DeInit
+    /* Set HSION bit */
+  RCC->CR |= (uint32_t)0x00000001;
+
+  /* Reset SW, HPRE, PPRE1, PPRE2, ADCPRE and MCO bits */
+  RCC->CFGR &= (uint32_t)0xF8FF0000;
+  
+  /* Reset HSEON, CSSON and PLLON bits */
+  RCC->CR &= (uint32_t)0xFEF6FFFF;
+
+  /* Reset HSEBYP bit */
+  RCC->CR &= (uint32_t)0xFFFBFFFF;
+
+  /* Reset PLLSRC, PLLXTPRE, PLLMUL and USBPRE/OTGFSPRE bits */
+  RCC->CFGR &= (uint32_t)0xFF80FFFF;
+
+  /* Disable all interrupts and clear pending bits  */
+  RCC->CIR = 0x009F0000;
+
+//RCC_HSEConfig
+  /* Reset HSEON bit */
+  RCC->CR &= ((uint32_t)0xFFFEFFFF);
+  /* Reset HSEBYP bit */
+  RCC->CR &= ((uint32_t)0xFFFBFFFF);
+  /* Configure HSE (RCC_HSE_OFF is already covered by the code section above) */
+    RCC->CR |= ((uint32_t)0x00010000);
+
+    while (RCC_GetFlagStatus(((uint8_t)0x31)) == RESET);
+    //RCC_PLLCmd(DISABLE);
+    *(__IO uint32_t *) (PERIPH_BB_BASE + ((RCC_OFFSET + 0x00) * 32) + (PLLON_BitNumber * 4)) = (uint32_t)0;
+    //AIR_RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_27, 1); //配置PLL,8*27=216MHz
+    AIR_RCC_PLLConfig(((uint32_t)0x00010000), ((uint32_t)0x10280000), 1);
+
+    //RCC_PLLCmd(ENABLE); //使能PLL
+    *(__IO uint32_t *) (PERIPH_BB_BASE + ((RCC_OFFSET + 0x00) * 32) + (PLLON_BitNumber * 4)) = (uint32_t)1;
+	while (RCC_GetFlagStatus(((uint8_t)0x39)) == RESET)
+		; //等待PLL就绪
+    
+    //RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK); //选择PLL作为系统时钟
+uint32_t tmpreg = 0;
+  /* Check the parameters */
+  tmpreg = RCC->CFGR;
+  /* Clear SW[1:0] bits */
+  tmpreg &= ((uint32_t)0xFFFFFFFC);
+  /* Set SW[1:0] bits according to RCC_SYSCLKSource value */
+  tmpreg |= ((uint32_t)0x00000002);
+  /* Store the new value */
+  RCC->CFGR = tmpreg;
+
+  //RCC_HCLKConfig(RCC_SYSCLK_Div1); //配置AHB时钟
+  tmpreg = 0;
+  tmpreg = RCC->CFGR;
+  /* Clear HPRE[3:0] bits */
+  tmpreg &= ((uint32_t)0xFFFFFF0F);
+  /* Set HPRE[3:0] bits according to RCC_SYSCLK value */
+  tmpreg |= ((uint32_t)0x00000000);
+  /* Store the new value */
+  RCC->CFGR = tmpreg;
+  //RCC_PCLK1Config(RCC_HCLK_Div2);	 //配置APB1时钟
+tmpreg = 0;
+  tmpreg = RCC->CFGR;
+  /* Clear PPRE1[2:0] bits */
+  tmpreg &= ((uint32_t)0xFFFFF8FF);
+  /* Set PPRE1[2:0] bits according to RCC_HCLK value */
+  tmpreg |= ((uint32_t)0x00000400);
+  /* Store the new value */
+  RCC->CFGR = tmpreg;
+  //RCC_PCLK2Config(RCC_HCLK_Div1);	 //配置APB2时钟
+    tmpreg = 0;
+  tmpreg = RCC->CFGR;
+  /* Clear PPRE2[2:0] bits */
+  tmpreg &= ((uint32_t)0xFFFFC7FF);
+  /* Set PPRE2[2:0] bits according to RCC_HCLK value */
+  tmpreg |= ((uint32_t)0x00000000) << 3;
+  /* Store the new value */
+  RCC->CFGR = tmpreg;
+
+    //RCC_LSICmd(ENABLE); //使能内部低速时钟
+    *(__IO uint32_t *) CSR_LSION_BB = (uint32_t)1;
+	while (RCC_GetFlagStatus(((uint8_t)0x61)) == RESET)
+		;				//等待LSI就绪
+    *(__IO uint32_t *) CR_HSION_BB = (uint32_t)1;
+	while (RCC_GetFlagStatus(((uint8_t)0x21)) == RESET)
+		; //等待HSI就绪
 }
 
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)

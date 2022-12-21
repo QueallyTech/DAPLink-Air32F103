@@ -159,6 +159,10 @@ void          USBD_IntrEna(void)
 
 void USBD_Init(void)
 {
+    // USBclk=PLLclk/4.5=48Mhz
+    RCC->CFGR &= ~(BIT(22)|BIT(23)|BIT(31));
+    RCC->CFGR |= ((uint32_t)0x80800000);
+
     RCC->APB1ENR |= (1 << 23);            /* enable clock for USB               */
     USBD_IntrEna();                       /* Enable USB Interrupts              */
     /* Control USB connecting via SW                                            */

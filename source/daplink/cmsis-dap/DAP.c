@@ -77,7 +77,7 @@ static uint8_t DAP_Info(uint8_t id, uint8_t *info) {
       length = DAP_GetVendorString((char *)info);
       break;
     case DAP_ID_PRODUCT:
-      length = DAP_GetProductString((char *)info);
+      // length = DAP_GetProductString((char *)info);
       break;
     case DAP_ID_SER_NUM:
       length = DAP_GetSerNumString((char *)info);
