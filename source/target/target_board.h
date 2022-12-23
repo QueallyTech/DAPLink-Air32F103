@@ -111,7 +111,7 @@ static inline const char * get_daplink_url_name ( void ) { return ((g_board_info
 static inline const char * get_daplink_drive_name ( void ) { return ((g_board_info.daplink_drive_name[0] != 0) ? g_board_info.daplink_drive_name : "DAPLINK    "); }
 
 //! @brief Returns the target information URL or a default.
-static inline const char * get_daplink_target_url ( void ) { return ((g_board_info.daplink_target_url[0] != 0) ? g_board_info.daplink_target_url : "https://mbed.org/device/?code=@U?version=@V?target_id=@T"); }
+static inline const char * get_daplink_target_url ( void ) { return ((g_board_info.daplink_target_url[0] != 0) ? g_board_info.daplink_target_url : "http://air32.cn"); }
 
 #ifdef __cplusplus
 }

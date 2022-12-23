@@ -1841,7 +1841,7 @@ const U8 USBD_BinaryObjectStoreDescriptor[] = {
 	0x88, 0x15, 0xB6, 0x65,
 	WBVAL(0x0100), /* 1.00 */               /* bcdVersion */
 	USBD_WEBUSB_VENDOR_CODE,                /* bVendorCode */
-	0,                                      /* iLandingPage */
+	1,                                      /* iLandingPage */
 #endif
 #if (USBD_WINUSB_ENABLE)
 	USBD_WINUSB_DESC_LEN,                   /* bLength */
