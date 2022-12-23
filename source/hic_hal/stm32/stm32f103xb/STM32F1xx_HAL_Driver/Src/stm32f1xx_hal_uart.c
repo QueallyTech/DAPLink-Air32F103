@@ -1898,11 +1898,11 @@ static void UART_SetConfig(UART_HandleTypeDef *huart)
   /*------- UART-associated USART registers setting : BRR Configuration ------*/
   if((huart->Instance == USART1))
   {
-    huart->Instance->BRR = UART_BRR_SAMPLING16(HAL_RCC_GetPCLK2Freq(), huart->Init.BaudRate);
+    huart->Instance->BRR = UART_BRR_SAMPLING16(216000000, huart->Init.BaudRate);
   }
   else
   {
-    huart->Instance->BRR = UART_BRR_SAMPLING16(HAL_RCC_GetPCLK1Freq(), huart->Init.BaudRate);
+    huart->Instance->BRR = UART_BRR_SAMPLING16((216000000/2), huart->Init.BaudRate);
   }
 }
 /**

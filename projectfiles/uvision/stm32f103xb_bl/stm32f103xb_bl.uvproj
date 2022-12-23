@@ -10,6 +10,7 @@
       <TargetName>stm32f103xb_bl</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -148,7 +149,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>3</TargetSelection>
+          <TargetSelection>12</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -1245,6 +1246,11 @@
               <FileName>usbd_STM32F103.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\source\hic_hal\stm32\stm32f103xb\usbd_STM32F103.c</FilePath>
+            </File>
+            <File>
+              <FileName>air32f10x_rcc_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\source\hic_hal\stm32\stm32f103xb\STM32F1xx_HAL_Driver\Src\air32f10x_rcc_ex.c</FilePath>
             </File>
           </Files>
         </Group>

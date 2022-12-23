@@ -136,7 +136,7 @@
 #if defined(STM32F100xB) ||defined(STM32F100xE)
   uint32_t SystemCoreClock         = 24000000;        /*!< System Clock Frequency (Core Clock) */
 #else /*!< HSI Selected as System Clock source */
-  uint32_t SystemCoreClock         = 72000000;        /*!< System Clock Frequency (Core Clock) */
+  uint32_t SystemCoreClock         = 216000000;        /*!< System Clock Frequency (Core Clock) */
 #endif
 
 const uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9};
@@ -286,7 +286,9 @@ void SystemCoreClockUpdate (void)
       SystemCoreClock = HSE_VALUE;
       break;
     case 0x08:  /* PLL used as system clock */
-
+      //固定频率
+      SystemCoreClock = 216000000;
+      break;
       /* Get PLL clock source and multiplication factor ----------------------*/
       pllmull = RCC->CFGR & RCC_CFGR_PLLMULL;
       pllsource = RCC->CFGR & RCC_CFGR_PLLSRC;
