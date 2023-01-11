@@ -48,8 +48,10 @@
 #define UART_CTS_PIN                 GPIO_PIN_0
 
 #define UART_RTS_PORT                GPIOA
-#define UART_RTS_PIN                 GPIO_PIN_1
+#define UART_RTS_PIN                 GPIO_PIN_9
 
+#define UART_DTR_PORT                GPIOA
+#define UART_DTR_PIN                 GPIO_PIN_10
 
 #define RX_OVRF_MSG         "<DAPLink:Overflow>\n"
 #define RX_OVRF_MSG_SIZE    (sizeof(RX_OVRF_MSG) - 1)
@@ -100,17 +102,23 @@ int32_t uart_initialize(void)
     GPIO_InitStructure.Pull = GPIO_PULLUP;
     HAL_GPIO_Init(UART_RX_PORT, &GPIO_InitStructure);
     //CTS pin, input
-    GPIO_InitStructure.Pin = UART_CTS_PIN;
-    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
-    GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStructure.Pull = GPIO_PULLUP;
-    HAL_GPIO_Init(UART_CTS_PORT, &GPIO_InitStructure);
+    // GPIO_InitStructure.Pin = UART_CTS_PIN;
+    // GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    // GPIO_InitStructure.Mode = GPIO_MODE_INPUT;
+    // GPIO_InitStructure.Pull = GPIO_PULLUP;
+    // HAL_GPIO_Init(UART_CTS_PORT, &GPIO_InitStructure);
     //RTS pin, output low
     HAL_GPIO_WritePin(UART_RTS_PORT, UART_RTS_PIN, GPIO_PIN_RESET);
     GPIO_InitStructure.Pin = UART_RTS_PIN;
     GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
     HAL_GPIO_Init(UART_RTS_PORT, &GPIO_InitStructure);
+    //DTR pin, output low
+    HAL_GPIO_WritePin(UART_DTR_PORT, UART_DTR_PIN, GPIO_PIN_RESET);
+    GPIO_InitStructure.Pin = UART_DTR_PIN;
+    GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
+    GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+    HAL_GPIO_Init(UART_DTR_PORT, &GPIO_InitStructure);
 
     NVIC_EnableIRQ(CDC_UART_IRQn);
 
@@ -216,6 +224,15 @@ int32_t uart_get_configuration(UART_Configuration *config)
 
 void uart_set_control_line_state(uint16_t ctrl_bmp)
 {
+    //bitmap (0. bit - DTR state, 1. bit - RTS state).
+    if(ctrl_bmp & 1)
+        UART_DTR_PORT->BRR = UART_DTR_PIN;
+    else
+        UART_DTR_PORT->BSRR = UART_DTR_PIN;
+    if(ctrl_bmp & 2)
+        UART_RTS_PORT->BRR = UART_RTS_PIN;
+    else
+        UART_RTS_PORT->BSRR = UART_RTS_PIN;
 }
 
 int32_t uart_write_free(void)
