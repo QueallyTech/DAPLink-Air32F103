@@ -92,7 +92,7 @@
 #define USBD_STRDESC_LANGID         0x0409
 #define USBD_STRDESC_MAN            L"Arm"
 #ifndef USB_PROD_STR
-#define USBD_STRDESC_PROD           L"°æµ„Œ“¿¥ﬁ∂—Ú√´°ø CMSIS-DAP"
+#define USBD_STRDESC_PROD           L"Air32 CMSIS-DAP"
 #else
 #define _TOWIDE(x)                   L ## #x
 #define TOWIDE(x)                   _TOWIDE(x)
