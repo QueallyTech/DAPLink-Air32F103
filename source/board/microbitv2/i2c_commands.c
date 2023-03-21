@@ -32,7 +32,6 @@
 
 
 extern uint16_t board_id_hex;
-extern power_source_t power_source;
 extern main_usb_connect_t usb_state;
 extern microbit_if_power_mode_t interface_power_mode;
 extern bool power_led_sleep_state_on;
@@ -77,10 +76,11 @@ static void i2c_write_comms_callback(uint8_t* pData, uint8_t size) {
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &daplink_version, sizeof(daplink_version));
                 }
                 break;
-                case gPowerState_c:
-                    power_source = pwr_mon_get_power_source();
+                case gPowerState_c: {
+                    power_source_t power_source = pwr_mon_get_power_source();
                     i2cResponse.cmdData.readRspCmd.dataSize = sizeof(power_source);
                     memcpy(&i2cResponse.cmdData.readRspCmd.data, &power_source, sizeof(power_source));
+                }
                 break;
                 case gPowerConsumption_c: {
                     uint32_t vin_voltage_uv = pwr_mon_get_vin_mv() * 1000;
@@ -381,4 +381,21 @@ void i2c_cmds_init() {
     i2c_registerReadCallback(i2c_read_comms_callback, I2C_SLAVE_NRF_KL_COMMS);
     i2c_registerWriteCallback(i2c_write_flash_callback, I2C_SLAVE_FLASH);
     i2c_registerReadCallback(i2c_read_flash_callback, I2C_SLAVE_FLASH);
+}
+
+void i2c_cmds_user_event(userEventType_t user_event) {
+    // Release COMBINED_SENSOR_INT in case it was previously asserted
+    gpio_disable_combined_int();
+
+    // Prepare I2C response
+    i2cCommand_t i2cResponse = {0};
+    i2cResponse.cmdId = gReadResponse_c;
+    i2cResponse.cmdData.readRspCmd.propertyId = (uint8_t) gUserEvent_c;
+    i2cResponse.cmdData.readRspCmd.dataSize = 1;
+    i2cResponse.cmdData.readRspCmd.data[0] = user_event;
+
+    i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
+
+    // Response ready, assert COMBINED_SENSOR_INT
+    gpio_assert_combined_int();
 }

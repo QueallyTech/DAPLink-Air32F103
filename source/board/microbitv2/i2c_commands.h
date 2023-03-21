@@ -71,7 +71,6 @@ typedef enum userEventType_tag {
 
 /*! property Id type enumeration */
 typedef enum errorCode_tag {
-    gErrorSuccess               = 0x30,
     gErrorIncompleteCommand_c   = 0x31,
     gErrorUnknownCommand_c      = 0x32,
     gErrorCommandDisallowed_c   = 0x33,
@@ -168,6 +167,7 @@ typedef __PACKED_STRUCT i2cFlashCmd_tag {
 } i2cFlashCmd_t;
 
 void i2c_cmds_init(void);
+void i2c_cmds_user_event(userEventType_t user_event);
 
 #ifdef __cplusplus
 }

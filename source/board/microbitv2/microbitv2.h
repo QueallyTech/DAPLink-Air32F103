@@ -33,23 +33,19 @@
 #define AUTOMATIC_SLEEP_DEFAULT         true
 
 // define the reset button presses
-#define RESET_SHORT_PRESS       10   // x 30ms debounce time = 300ms
-#define RESET_MID_PRESS         80   // x 30ms debounce time = 2400ms
+#define RESET_SHORT_PRESS       80   // x 30ms debounce time = 2400ms
 #define RESET_LONG_PRESS        120  // x 30ms debounce time = 3600ms
 #define RESET_MAX_LENGTH_PRESS  RESET_LONG_PRESS
 
 typedef enum main_shutdown_state {
     MAIN_SHUTDOWN_WAITING = 0,
-    MAIN_SHUTDOWN_WAITING_OFF,
     MAIN_SHUTDOWN_PENDING,
     MAIN_SHUTDOWN_REACHED,
     MAIN_SHUTDOWN_REACHED_FADE,
     MAIN_SHUTDOWN_REQUESTED,
-    MAIN_USER_EVENT,
     MAIN_LED_BLINK_ONCE,
     MAIN_LED_BLINKING,
     MAIN_LED_FULL_BRIGHTNESS,
-    MAIN_SHUTDOWN_CANCEL
 } main_shutdown_state_t;
 
 #endif /* MICROBITV2_H_ */

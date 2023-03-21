@@ -57,8 +57,7 @@ extern target_cfg_t target_device_nrf52833;
 volatile uint8_t wake_from_reset = 0;
 volatile uint8_t wake_from_usb = 0;
 volatile bool usb_pc_connected = false;
-power_source_t power_source;
-microbit_if_power_mode_t interface_power_mode = MB_POWER_DOWN;
+microbit_if_power_mode_t interface_power_mode = MB_POWER_RUNNING;
 bool power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 bool automatic_sleep_on = AUTOMATIC_SLEEP_DEFAULT;
 main_shutdown_state_t main_shutdown_state = MAIN_SHUTDOWN_WAITING;
@@ -74,7 +73,6 @@ static uint32_t read_file_data_txt(uint32_t sector_offset, uint8_t *data, uint32
 static uint8_t shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
 static uint8_t final_fade_led_dc = 0;
 static uint8_t power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
-static uint8_t initial_fade_brightness = PWR_LED_INIT_FADE_BRIGHTNESS;
 // reset button state count
 static uint16_t gpio_reset_count = 0;
 // button state
@@ -126,15 +124,13 @@ static void prerun_board_config(void)
     power_init();
     pwr_mon_init();
 
-    power_source = pwr_mon_get_power_source();
-
     pwm_init();
     pwm_init_pins();
 
+    power_source_t power_source = pwr_mon_get_power_source();
     if (power_source == PWR_BATT_ONLY){
         // Turn on the red LED with low duty cycle to conserve power.
         power_led_max_duty_cycle = PWR_LED_ON_BATT_BRIGHTNESS;
-
     } else {
         // Turn on the red LED with max duty cycle when powered by USB or EC
         power_led_max_duty_cycle = PWR_LED_ON_MAX_BRIGHTNESS;
@@ -177,24 +173,18 @@ void handle_reset_button()
             reset_pressed = 0;
             power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
 
-            if (gpio_reset_count <= RESET_SHORT_PRESS) {
-                main_shutdown_state = MAIN_LED_BLINK_ONCE;
-            }
-            else if (gpio_reset_count < RESET_MID_PRESS) {
+            if (gpio_reset_count < RESET_SHORT_PRESS) {
                 // Indicate button has been released to stop to cancel the shutdown
                 main_shutdown_state = MAIN_LED_BLINK_ONCE;
             }
-            else if (gpio_reset_count >= RESET_MID_PRESS) {
+            else if (gpio_reset_count >= RESET_SHORT_PRESS) {
                 // Indicate the button has been released when shutdown is requested
-                main_shutdown_state = MAIN_USER_EVENT;
+                i2c_cmds_user_event(gResetButtonLongPress_c);
+                main_shutdown_state = MAIN_SHUTDOWN_WAITING;
             }
         } else if (reset_pressed && gpio_get_reset_btn_fwrd()) {
             // Reset button is still pressed
-            if (gpio_reset_count <= RESET_SHORT_PRESS) {
-                // Enter the shutdown pending state to begin LED dimming
-                main_shutdown_state = MAIN_SHUTDOWN_PENDING;
-            }
-            else if (gpio_reset_count < RESET_MID_PRESS) {
+            if (gpio_reset_count < RESET_SHORT_PRESS) {
                 // Enter the shutdown pending state to begin LED dimming
                 main_shutdown_state = MAIN_SHUTDOWN_PENDING;
             }
@@ -231,11 +221,12 @@ void board_30ms_hook()
     }
 
     if (wake_from_usb) {
-        main_shutdown_state = MAIN_USER_EVENT;
-
+        wake_from_usb = 0;
         if (usb_state == USB_DISCONNECTED) {
             usb_state = USB_CONNECTING;
         }
+        power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
+        i2c_cmds_user_event(gWakeFromWakeOnEdge_c);
     }
 
     i2c_30ms_tick();
@@ -250,16 +241,11 @@ void board_30ms_hook()
     switch (main_shutdown_state) {
       case MAIN_LED_FULL_BRIGHTNESS:
           // Jump power LED to initial fade brightness
-          shutdown_led_dc = initial_fade_brightness;
-          break;
-      case MAIN_SHUTDOWN_CANCEL:
-          main_shutdown_state = MAIN_SHUTDOWN_WAITING;
-          // Set the PWM value back to max duty cycle
-          shutdown_led_dc = power_led_max_duty_cycle;
+          shutdown_led_dc = PWR_LED_INIT_FADE_BRIGHTNESS;
           break;
       case MAIN_SHUTDOWN_PENDING:
           // Fade the PWM until the board is about to be shut down
-          shutdown_led_dc = initial_fade_brightness - gpio_reset_count * (initial_fade_brightness - PWR_LED_FADEOUT_MIN_BRIGHTNESS)/(RESET_MID_PRESS);
+          shutdown_led_dc = PWR_LED_INIT_FADE_BRIGHTNESS - gpio_reset_count * (PWR_LED_INIT_FADE_BRIGHTNESS - PWR_LED_FADEOUT_MIN_BRIGHTNESS)/(RESET_SHORT_PRESS);
           break;
       case MAIN_SHUTDOWN_REACHED:
           // Hold LED in min brightness
@@ -272,46 +258,11 @@ void board_30ms_hook()
               final_fade_led_dc--;
           }
           break;
-      case MAIN_USER_EVENT:
-          {
-          // Release COMBINED_SENSOR_INT in case it was previously asserted
-          gpio_disable_combined_int();
-
-          // Prepare I2C response
-          i2cCommand_t i2cResponse = {0};
-          i2cResponse.cmdId = gReadResponse_c;
-          i2cResponse.cmdData.readRspCmd.propertyId = (uint8_t) gUserEvent_c;
-          i2cResponse.cmdData.readRspCmd.dataSize = 1;
-
-          if (wake_from_usb) {
-              i2cResponse.cmdData.readRspCmd.data[0] = gWakeFromWakeOnEdge_c;
-              wake_from_usb = 0;
-              power_led_sleep_state_on = PWR_LED_SLEEP_STATE_DEFAULT;
-          } else {
-              i2cResponse.cmdData.readRspCmd.data[0] = gResetButtonLongPress_c;
-          }
-
-          i2c_fillBuffer((uint8_t*) &i2cResponse, 0, sizeof(i2cResponse));
-
-          // Response ready, assert COMBINED_SENSOR_INT
-          gpio_assert_combined_int();
-
-          // Return LED to ON after release of long press
-          main_shutdown_state = MAIN_SHUTDOWN_WAITING;
-          }
-          break;
       case MAIN_SHUTDOWN_REQUESTED:
-          if (power_source == PWR_BATT_ONLY || (usb_state == USB_DISCONNECTED && !usb_pc_connected)) {
+          if (usb_state == USB_DISCONNECTED && !usb_pc_connected) {
               main_powerdown_event();
 
-              // In VLLS0, set the LED either ON or LOW, depending on power_led_sleep_state_on
-              // When the duty cycle is 0% or 100%, the FlexIO driver will configure the pin as GPIO
-              if (power_led_sleep_state_on == true && interface_power_mode == MB_POWER_DOWN) {
-                  shutdown_led_dc = PWR_LED_ON_MAX_BRIGHTNESS;
-              } else if (power_led_sleep_state_on == true && interface_power_mode == MB_POWER_SLEEP) {
-                  shutdown_led_dc = PWR_LED_ON_BATT_BRIGHTNESS;
-              }
-              else {
+              if (!power_led_sleep_state_on) {
                   shutdown_led_dc = 0;
               }
 
@@ -324,9 +275,6 @@ void board_30ms_hook()
       case MAIN_SHUTDOWN_WAITING:
           // Set the PWM value back to max duty cycle
           shutdown_led_dc = power_led_max_duty_cycle;
-          break;
-      case MAIN_SHUTDOWN_WAITING_OFF:
-          shutdown_led_dc = 0;
           break;
       case MAIN_LED_BLINKING:
            // Blink the LED to indicate standby mode
@@ -385,6 +333,7 @@ void board_handle_powerdown()
     switch(interface_power_mode){
         case MB_POWER_SLEEP:
             power_sleep();
+            interface_power_mode = MB_POWER_RUNNING;
             break;
         case MB_POWER_DOWN:
             power_down();
