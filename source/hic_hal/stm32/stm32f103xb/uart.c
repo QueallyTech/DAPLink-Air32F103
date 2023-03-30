@@ -141,10 +141,20 @@ int32_t uart_reset(void)
     return 1;
 }
 
+//存储上一次的串口配置
+static char last_uart_config[sizeof(UART_Configuration)] = {0};
 int32_t uart_set_configuration(UART_Configuration *config)
 {
     UART_HandleTypeDef uart_handle;
     HAL_StatusTypeDef status;
+
+    // 如果配置没有变化，直接返回
+    if(memcmp(last_uart_config, config, sizeof(UART_Configuration)) == 0) {
+        return 1;
+    }
+    else {// 如果配置有变化，先保存配置
+        memcpy(last_uart_config, config, sizeof(UART_Configuration));
+    }
 
     memset(&uart_handle, 0, sizeof(uart_handle));
     uart_handle.Instance = CDC_UART;
