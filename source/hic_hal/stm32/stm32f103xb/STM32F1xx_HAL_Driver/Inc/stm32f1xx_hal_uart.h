@@ -635,7 +635,7 @@ do{                                         \
   *         divided by the smallest oversampling used on the USART (i.e. 16) 
   * Retrun : TRUE or FALSE
   */
-#define IS_UART_BAUDRATE(__BAUDRATE__) ((__BAUDRATE__) < 4500001)
+#define IS_UART_BAUDRATE(__BAUDRATE__) ((__BAUDRATE__) < 21600001)
 
 /** Check UART Node Address
   *         __ADDRESS__: UART Node address specified by the user

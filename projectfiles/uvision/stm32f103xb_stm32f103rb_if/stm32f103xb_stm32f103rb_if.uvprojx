@@ -16,9 +16,9 @@
         <TargetCommonOption>
           <Device>AIR32F103CB</Device>
           <Vendor>Generic</Vendor>
-          <PackID>Keil.AIR32F103_DFP.1.0.7</PackID>
+          <PackID>Keil.AIR32F103_DFP.1.1.2</PackID>
           <PackURL>https://luatos.com/t/air32f103/</PackURL>
-          <Cpu>IRAM(0x20000000,0x8000) IROM(0x08000000,0x20000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x18000) IROM(0x08000000,0x20000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
           <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0Air32F103CBT6 -FS08000000 -FL020000 -FP0($$Device:AIR32F103CB$Flash\Air32F103CBT6.FLM))</FlashDriverDll>
@@ -246,7 +246,7 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x18000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
@@ -301,7 +301,7 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x18000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls> --gnu --asm --interleave -g</MiscControls>
-              <Define>DAPLINK_VERSION=258, MSC_ENDPOINT, CDC_ENDPOINT, WEBUSB_INTERFACE, WINUSB_INTERFACE, DRAG_N_DROP_SUPPORT, DAPLINK_IF, DAPLINK_BUILD_KEY=0x9B939E8F, OS_TICK_FREQ=100, INTERFACE_STM32F103XB, USE_HAL_DRIVER, STM32F103xB, DAPLINK_HIC_ID=0x97969908, __packed=__packed, DAPLINK_NO_ASSERT_FILENAMES, OS_CLOCK=72000000, HID_ENDPOINT, USE_LEGACY_CMSIS_RTOS, OS_TICK=10000</Define>
+              <Define>DAPLINK_VERSION=258,MSC_ENDPOINT, CDC_ENDPOINT, WEBUSB_INTERFACE, WINUSB_INTERFACE, DRAG_N_DROP_SUPPORT, DAPLINK_IF, DAPLINK_BUILD_KEY=0x9B939E8F, OS_TICK_FREQ=100, INTERFACE_STM32F103XB, USE_HAL_DRIVER, STM32F103xB, DAPLINK_HIC_ID=0x97969908, __packed=__packed, DAPLINK_NO_ASSERT_FILENAMES, OS_CLOCK=72000000, HID_ENDPOINT, USE_LEGACY_CMSIS_RTOS, OS_TICK=10000</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\source\usb; ..\..\..\source\daplink\cmsis-dap; ..\..\..\source\daplink\drag-n-drop; ..\..\..\source\daplink\usb2uart; ..\..\..\source\daplink\settings; ..\..\..\source\daplink; ..\..\..\source\daplink\interface; ..\..\..\source\cmsis-core; ..\..\..\source\hic_hal; ..\..\..\source\hic_hal\cmsis-driver; ..\..\..\source\target; ..\..\..\source\hic_hal\stm32\stm32f103xb; ..\..\..\source\hic_hal\stm32\stm32f103xb\cmsis; ..\..\..\source\hic_hal\stm32\stm32f103xb\STM32F1xx_HAL_Driver; ..\..\..\source\hic_hal\stm32\stm32f103xb\STM32F1xx_HAL_Driver\Inc; ..\..\..\source\rtos</IncludePath>
             </VariousControls>
