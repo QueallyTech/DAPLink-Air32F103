@@ -43,7 +43,7 @@ target_cfg_t target_device = {
     .flash_regions[0].end       = 0x08000000 + KB(128),
     .flash_regions[0].flags     = kRegionIsDefault,
     .ram_regions[0].start       = 0x20000000,
-    .ram_regions[0].end         = 0x20005000,
+    .ram_regions[0].end         = 0x20018000,
     /* .flash_algo not needed for bootloader */
 };
 
