@@ -24,9 +24,9 @@
 
 const board_info_t g_board_info = {
     .info_version = kBoardInfoVersion,
-    .board_id = "0700",
+    .board_id = "0001",
     .family_id = kStub_HWReset_FamilyID,
     .target_cfg = &target_device,
-    .board_vendor = "STMicroelectronics",
-    .board_name = "NUCLEO-F103RB",
+    .board_vendor = "LuatOS",
+    .board_name = "Air32 MINI DAPLink",
 };
