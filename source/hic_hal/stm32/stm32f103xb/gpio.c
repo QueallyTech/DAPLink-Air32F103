@@ -191,20 +191,20 @@ void gpio_init(void)
 
 void gpio_set_hid_led(gpio_led_state_t state)
 {
-    // LED is active low
-    HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, state ? GPIO_PIN_RESET : GPIO_PIN_SET);
+    // LED is active high
+    HAL_GPIO_WritePin(PIN_HID_LED_PORT, PIN_HID_LED, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
 void gpio_set_cdc_led(gpio_led_state_t state)
 {
-    // LED is active low
-    HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, state ? GPIO_PIN_RESET : GPIO_PIN_SET);
+    // LED is active high
+    HAL_GPIO_WritePin(PIN_CDC_LED_PORT, PIN_CDC_LED, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
 void gpio_set_msc_led(gpio_led_state_t state)
 {
-    // LED is active low
-    HAL_GPIO_WritePin(PIN_MSC_LED_PORT, PIN_MSC_LED, state ? GPIO_PIN_RESET : GPIO_PIN_SET);
+    // LED is active high
+    HAL_GPIO_WritePin(PIN_MSC_LED_PORT, PIN_MSC_LED, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
 uint8_t gpio_get_reset_btn_no_fwrd(void)

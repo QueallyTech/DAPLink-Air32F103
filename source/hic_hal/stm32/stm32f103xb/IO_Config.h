@@ -38,8 +38,8 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 
 //Connected LED
 #define CONNECTED_LED_PORT           GPIOB
-#define CONNECTED_LED_PIN            GPIO_PIN_6
-#define CONNECTED_LED_PIN_Bit        6
+#define CONNECTED_LED_PIN            GPIO_PIN_11
+#define CONNECTED_LED_PIN_Bit        11
 
 //When bootloader, disable the target port(not used)
 #define POWER_EN_PIN_PORT            GPIOB
@@ -66,21 +66,21 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 
 //LEDs
 //USB status LED
-#define RUNNING_LED_PORT             GPIOA
-#define RUNNING_LED_PIN              GPIO_PIN_0
-#define RUNNING_LED_Bit              0
+#define RUNNING_LED_PORT             GPIOB
+#define RUNNING_LED_PIN              GPIO_PIN_2
+#define RUNNING_LED_Bit              2
 
 #define PIN_HID_LED_PORT             GPIOB
-#define PIN_HID_LED                  GPIO_PIN_2
-#define PIN_HID_LED_Bit              2
+#define PIN_HID_LED                  GPIO_PIN_6
+#define PIN_HID_LED_Bit              6
 
 #define PIN_CDC_LED_PORT             GPIOB
 #define PIN_CDC_LED                  GPIO_PIN_10
 #define PIN_CDC_LED_Bit              10
 
-#define PIN_MSC_LED_PORT             GPIOB
-#define PIN_MSC_LED                  GPIO_PIN_11
-#define PIN_MSC_LED_Bit              11
+#define PIN_MSC_LED_PORT             GPIOA
+#define PIN_MSC_LED                  GPIO_PIN_0
+#define PIN_MSC_LED_Bit              0
 
 
 #endif
