@@ -92,7 +92,7 @@
 #define USBD_STRDESC_LANGID         0x0409
 #define USBD_STRDESC_MAN            L"Arm"
 #ifndef USB_PROD_STR
-#define USBD_STRDESC_PROD           L"Air32 CMSIS-DAP"
+#define USBD_STRDESC_PROD           L"DAPLink CMSIS-DAP"
 #else
 #define _TOWIDE(x)                   L ## #x
 #define TOWIDE(x)                   _TOWIDE(x)
@@ -383,8 +383,8 @@
 //     WebUSB support
 #define USBD_WEBUSB_ENABLE          WEBUSB_INTERFACE
 #define USBD_WEBUSB_VENDOR_CODE     0x21
-#define USBD_WEBUSB_LANDING_URL     "wiki.luatos.com/dap/?"
-#define USBD_WEBUSB_ORIGIN_URL      "wiki.luatos.com/"
+#define USBD_WEBUSB_LANDING_URL     "os.mbed.com/webusb/landing-page/?bid="
+#define USBD_WEBUSB_ORIGIN_URL      "os.mbed.com/"
 
 //     Microsoft OS Descriptors 2.0 (WinUSB) support
 #define USBD_WINUSB_ENABLE          WINUSB_INTERFACE

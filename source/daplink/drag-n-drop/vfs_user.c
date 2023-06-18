@@ -372,7 +372,7 @@ static uint32_t read_file_mbed_htm(uint32_t sector_offset, uint8_t *buf, uint32_
         "<html>\r\n"
         "<head>\r\n"
         "<meta charset=\"utf-8\">\r\n"
-        "<title>Air32 DAPLink</title>\r\n"
+        "<title>mbed Website Shortcut</title>\r\n"
         "</head>\r\n"
         "<body>\r\n"
         "<script>\r\n"
@@ -521,7 +521,7 @@ static uint32_t update_details_txt_file(uint8_t *buf, uint32_t size, uint32_t st
     uint32_t pos = 0;
 
     pos += util_write_string_in_region(buf, size, start, pos,
-        "# DAPLink Firmware - see https://gitee.com/openLuat/luatos-soc-air32f103/\r\n"
+        "# DAPLink Firmware - see https://daplink.io\r\n"
         // Build ID
         "Build ID: " GIT_DESCRIPTION " (" COMPILER_DESCRIPTION LOCAL_MODS ")\r\n");
     // Unique ID
