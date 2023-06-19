@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls> --gnu --asm --interleave -g</MiscControls>
-              <Define>DAPLINK_VERSION=258,BULK_ENDPOINT,MSC_ENDPOINT, CDC_ENDPOINT, WEBUSB_INTERFACE, WINUSB_INTERFACE, DRAG_N_DROP_SUPPORT, DAPLINK_IF, DAPLINK_BUILD_KEY=0x9B939E8F, OS_TICK_FREQ=100, INTERFACE_STM32F103XB, USE_HAL_DRIVER, STM32F103xB, DAPLINK_HIC_ID=0x97969908, __packed=__packed, DAPLINK_NO_ASSERT_FILENAMES, OS_CLOCK=72000000, HID_ENDPOINT, USE_LEGACY_CMSIS_RTOS, OS_TICK=10000</Define>
+              <Define>DAPLINK_VERSION=259,BULK_ENDPOINT,MSC_ENDPOINT, CDC_ENDPOINT, WEBUSB_INTERFACE, WINUSB_INTERFACE, DRAG_N_DROP_SUPPORT, DAPLINK_IF, DAPLINK_BUILD_KEY=0x9B939E8F, OS_TICK_FREQ=100, INTERFACE_STM32F103XB, USE_HAL_DRIVER, STM32F103xB, DAPLINK_HIC_ID=0x97969908, __packed=__packed, DAPLINK_NO_ASSERT_FILENAMES, OS_CLOCK=72000000, HID_ENDPOINT, USE_LEGACY_CMSIS_RTOS, OS_TICK=10000</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\..\source\usb; ..\..\..\source\daplink\cmsis-dap; ..\..\..\source\daplink\drag-n-drop; ..\..\..\source\daplink\usb2uart; ..\..\..\source\daplink\settings; ..\..\..\source\daplink; ..\..\..\source\daplink\interface; ..\..\..\source\cmsis-core; ..\..\..\source\hic_hal; ..\..\..\source\hic_hal\cmsis-driver; ..\..\..\source\target; ..\..\..\source\hic_hal\stm32\stm32f103xb; ..\..\..\source\hic_hal\stm32\stm32f103xb\cmsis; ..\..\..\source\hic_hal\stm32\stm32f103xb\STM32F1xx_HAL_Driver; ..\..\..\source\hic_hal\stm32\stm32f103xb\STM32F1xx_HAL_Driver\Inc; ..\..\..\source\rtos</IncludePath>
             </VariousControls>
@@ -355,7 +355,7 @@
             <useXO>0</useXO>
             <ClangAsOpt>1</ClangAsOpt>
             <VariousControls>
-              <MiscControls>--cpreproc --cpreproc_opts=-DDAPLINK_VERSION=258,-DMSC_ENDPOINT,-DCDC_ENDPOINT,-DWEBUSB_INTERFACE,-DWINUSB_INTERFACE,-DDRAG_N_DROP_SUPPORT,-DDAPLINK_IF,-DDAPLINK_BUILD_KEY=0x9B939E8F,-DOS_TICK_FREQ=100,-DINTERFACE_STM32F103XB,-DUSE_HAL_DRIVER,-DSTM32F103xB,-DDAPLINK_HIC_ID=0x97969908,-D__packed=__packed,-DDAPLINK_NO_ASSERT_FILENAMES,-DOS_CLOCK=72000000,-DHID_ENDPOINT,-DUSE_LEGACY_CMSIS_RTOS,-DOS_TICK=10000 -g</MiscControls>
+              <MiscControls>--cpreproc --cpreproc_opts=-DDAPLINK_VERSION=259,-DMSC_ENDPOINT,-DCDC_ENDPOINT,-DWEBUSB_INTERFACE,-DWINUSB_INTERFACE,-DDRAG_N_DROP_SUPPORT,-DDAPLINK_IF,-DDAPLINK_BUILD_KEY=0x9B939E8F,-DOS_TICK_FREQ=100,-DINTERFACE_STM32F103XB,-DUSE_HAL_DRIVER,-DSTM32F103xB,-DDAPLINK_HIC_ID=0x97969908,-D__packed=__packed,-DDAPLINK_NO_ASSERT_FILENAMES,-DOS_CLOCK=72000000,-DHID_ENDPOINT,-DUSE_LEGACY_CMSIS_RTOS,-DOS_TICK=10000 -g</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
