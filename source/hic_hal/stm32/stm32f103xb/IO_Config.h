@@ -28,6 +28,9 @@
 
 COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 
+// Enable JTAG for DAPLink, which uses RTS as TDI and DTR as TDO
+#define ENABLE_JTAG 0
+
 //USB control pin
 #define USB_CONNECT_PORT_ENABLE()    __HAL_RCC_GPIOA_CLK_ENABLE()
 #define USB_CONNECT_PORT_DISABLE()   __HAL_RCC_GPIOA_CLK_DISABLE()
@@ -63,6 +66,23 @@ COMPILER_ASSERT(DAPLINK_HIC_ID == DAPLINK_HIC_ID_STM32F103XB);
 #define SWDIO_IN_PIN_PORT            GPIOB
 #define SWDIO_IN_PIN                 GPIO_PIN_12
 #define SWDIO_IN_PIN_Bit             12
+
+// JTAG
+#define JTAG_TCK_PIN_PORT            SWCLK_TCK_PIN_PORT
+#define JTAG_TCK_PIN                 SWCLK_TCK_PIN
+#define JTAG_TCK_PIN_Bit             SWCLK_TCK_PIN_Bit
+
+#define JTAG_TMS_PIN_PORT            SWDIO_OUT_PIN_PORT
+#define JTAG_TMS_PIN                 SWDIO_OUT_PIN
+#define JTAG_TMS_PIN_Bit             SWDIO_OUT_PIN_Bit
+
+#define JTAG_TDI_PIN_PORT            UART_DTR_PORT
+#define JTAG_TDI_PIN                 UART_DTR_PIN
+#define JTAG_TDI_PIN_Bit             10
+
+#define JTAG_TDO_PIN_PORT            UART_DTR_PORT
+#define JTAG_TDO_PIN                 UART_RTS_PIN
+#define JTAG_TDO_PIN_Bit             9
 
 //LEDs
 //USB status LED
